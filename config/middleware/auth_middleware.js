@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const dbConnection = require('../database');
+const memberController = require('../../controller/memberController');
+
 const app = express();
 app.use(bodyParser.json());
 const passport = require("passport");
@@ -15,9 +16,13 @@ const jwtOptions = {
     jwtFromRequest: ExtractJwt.fromHeader("eng-session"),
     secretOrKey: SECRET
  };
- const jwtAuth = new JwtStrategy(jwtOptions, (payload, done) => {
-    if (payload.sub === "kennaruk") done(null, true);
-    else done(null, false);
+ const jwtAuth = new  JwtStrategy(jwtOptions, async (payload, done) => {
+   member = await memberController.findMember(payload.sub[0].username);
+   if(member) {
+      done(null, true)
+   } else {
+      dine(null, false)
+   }
  });
  //เสียบ Strategy เข้า Passport
  passport.use(jwtAuth);
