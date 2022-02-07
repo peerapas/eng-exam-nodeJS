@@ -4,12 +4,15 @@ var express = require('express');
 var router = express.Router()
 
 router.get('/', async (req, res) => {
-    params = req.params
+    query = req.query
+    console.log(query)
+    params = {}
     sql = 'select F_Id as id, F_NAME as name from tbl_courses where F_STATUS = 1'
-    if(params['id']) {
-        sql+=' and F_ID = :id',{id:params['id']}
+    if(query['id']) {
+        sql+=' and F_ID = :id'
+        params['id'] = query['id']
     }
-    const row = await dbConnection.getall(sql)
+    const row = await dbConnection.getall(sql, params)
     if(row) {
         datas = {
             status: 'success',
