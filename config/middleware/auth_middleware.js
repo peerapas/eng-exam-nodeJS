@@ -17,7 +17,8 @@ const jwtOptions = {
     secretOrKey: SECRET
  };
  const jwtAuth = new  JwtStrategy(jwtOptions, async (payload, done) => {
-   member = await memberController.findMember(payload.sub[0].username);
+   // console.log(payload.sub)
+   member = await memberController.findMember(payload.sub.username);
    if(member) {
       done(null, true)
    } else {
