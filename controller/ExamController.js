@@ -5,12 +5,15 @@ var router = express.Router()
 
 router.get('/', async (req, res) => {
     query = req.query
-    console.log(query)
+    sql = "select F_ID as id, F_COURSE_ID as courseId, F_EXAM_DATE as examDate, F_DESIGN_DATE as designDate, F_REVIEW_DATE as reviewDate, F_SET_AMOUNT as setAmount, F_EXAM_AMOUNT as examAmount, F_CR_BY as crBy from tbl_exams where F_STATUS = 1";
     params = {}
-    sql = 'select F_Id as id, F_NAME as name from tbl_courses where F_STATUS = 1'
     if(query['id']) {
-        sql+=' and F_ID = :id'
+        sql+= ' and F_ID = :id'
         params['id'] = query['id']
+    }
+    if(query['courseId']) {
+        sql+= ' and F_COURSE_ID = :courseId'
+        params['courseId'] = query['courseId']
     }
     const row = await dbConnection.getall(sql, params)
     if(row) {
@@ -26,7 +29,6 @@ router.get('/', async (req, res) => {
         }
         res.send(datas)
     }
-
 })
 
 module.exports = router
